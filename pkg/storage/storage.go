@@ -95,6 +95,7 @@ func (s *Storage) NewTask(t Task) (int, error) {
 	return id, err
 }
 
+// RemoveTask удаляет задачу и если есть связь с метками, возвращает количество измененнных строк.
 func (s *Storage) RemoveTask(taskID int) (int, error) {
 	var counter int
 	s.db.QueryRow(context.Background(), `
@@ -115,6 +116,7 @@ func (s *Storage) RemoveTask(taskID int) (int, error) {
 	return int(commandTag.RowsAffected()), err
 }
 
+// UpdateTask обноваляет заголовок и содержание задачи
 func (s *Storage) UpdateTask(t Task, taskID int) (int, error) {
 	var id int
 	err := s.db.QueryRow(context.Background(), `
@@ -130,6 +132,7 @@ func (s *Storage) UpdateTask(t Task, taskID int) (int, error) {
 	return id, err
 }
 
+// TasksByLabel Возвращает список задачи по метке
 func (s *Storage) TasksByLabel(labelID int) ([]Task, error) {
 	rows, err := s.db.Query(context.Background(), `
 		SELECT 
